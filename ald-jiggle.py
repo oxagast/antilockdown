@@ -10,9 +10,7 @@ import uuid
 import multiprocessing
 from bthid import BluetoothHIDService
 from dbus.mainloop.glib import DBusGMainLoop
-sys.tracebacklimit = 0
-#print (attackmac)
-#attackmac = sys.argv[1]
+sys.tracebacklimit = 0  # this removes the traceback
 start_time = time.time()
 waiting = 0
 attackmac = (hex(uuid.getnode()+4).lstrip("0x").zfill(2).upper()) # gotta add 4 to get to the HID ctl otherwise proto wrong
@@ -20,38 +18,29 @@ attackmac = ':'.join(attackmac[i:i+2] for i in range(0, len(attackmac), 2))  # t
 print("[?] Jiggalo by oxagast")
 print("[?] Inhibits screensavers by pressing innoculous keys over bluetooth.")
 print("[*] Attacking MAC detected as: %s" % attackmac)
-
 def macr(send_call_back):
-    def slpa():
-        kstate = bytearray([0xA1, 0x00, 0x00, 0x00, 0x47, 0x00, 0x00, 0x00, 0x00, 0x00])  # nop
-        time.sleep(1)
-        send_call_back(bytes(kstate))
-        kstate = bytearray([0xA1, 0x00, 0x00, 0x00, 0x48, 0x00, 0x00, 0x00, 0x00, 0x00])  # nop
-        send_call_back(bytes(kstate))
-
     def fkeys():
         j = 1
         while j:
-            kstate = bytearray([0xA1, 0x01, 0x00, 0x00, 0x43, 0x00, 0x00, 0x00, 0x00, 0x00])  # nop
+            kstate = bytearray([0xA1, 0x01, 0x00, 0x00, 0x43, 0x00, 0x00, 0x00, 0x00, 0x00])  # code to press shift+F10
             time.sleep(1)
+            send_call_back(bytes(kstate))  # these actually send the keystroke
+            kstate = bytearray([0xA1, 0x01, 0x00, 0x00, 0x42, 0x00, 0x00, 0x00, 0x00, 0x00])  # code to press shift+F9
             send_call_back(bytes(kstate))
-            kstate = bytearray([0xA1, 0x01, 0x00, 0x00, 0x42, 0x00, 0x00, 0x00, 0x00, 0x00])  # nop
-            send_call_back(bytes(kstate))
-            time.sleep(15)
-
+            time.sleep(15) # every 15 seconds so we're well within the screensaver timer
     def ani():
         waiting = 1;
         idx = 0
         while waiting:
-            animation = "|/-\\"
-            print(animation[idx % len(animation)], end='\r')
+            animation = "|/-\\"  # we iterate over this
+            print(animation[idx % len(animation)], end='\r') # \r repositions the cursor at start
             idx+=1
             time.sleep(0.1)
 
     print("[!] Inhibiting lock screen on remote computer!")
     jiggle = 1
-    anip = multiprocessing.Process(target=ani)
-    jigp = multiprocessing.Process(target=fkeys)
+    anip = multiprocessing.Process(target=ani) # the spinning animation thread
+    jigp = multiprocessing.Process(target=fkeys) # pressing keys thread
     jigp.start()
     anip.start()
     jigp.join()
