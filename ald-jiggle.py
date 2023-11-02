@@ -8,11 +8,15 @@ import time
 import re
 import uuid
 import multiprocessing
+import subprocess
 import getpass
 from bthid import BluetoothHIDService
 from dbus.mainloop.glib import DBusGMainLoop
 
 sys.tracebacklimit = 0  # this removes the traceback
+btsrv = "bluetooth"
+subprocess.call(["systemctl", "stop", btsrv])
+subprocess.call(["bluetoothd", "-P", "input"])
 waiting = 0
 attackmac = (hex(uuid.getnode()+4).lstrip("0x").zfill(2).upper()) # gotta add 4 to get to the HID ctl otherwise proto wrong
 attackmac = ':'.join(attackmac[i:i+2] for i in range(0, len(attackmac), 2))  # this just adds the : every 2 chars
@@ -37,7 +41,7 @@ def macr(send_call_back):
         idx = 0
         while waiting:
             animation = "|/-\\"  # we iterate over this
-            print(animation[idx % len(animation)], end='\r') # \r repositions the cursor at start
+            print("[" + animation[idx % len(animation)] + "] Jiggling...", end='\r') # \r repositions the cursor at start
             idx+=1
             time.sleep(0.1)
     print("[!] Inhibiting lock screen on remote computer!")
