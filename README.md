@@ -1,5 +1,5 @@
 # AntiLockDown
-Inhibit a screensaver/lock screen via Bluetooth (also known as a Jiggler)
+Inhibit a screensaver/lock screen via Bluetooth (also known as a *Jiggler*)
 
 Author: oxagast
 
