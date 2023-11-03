@@ -13,18 +13,17 @@ import getpass
 from bthid import BluetoothHIDService
 from dbus.mainloop.glib import DBusGMainLoop
 
-sys.tracebacklimit = 0  # this removes the traceback
-btsrv = "bluetooth"
-subprocess.call(["systemctl", "stop", btsrv])
-subprocess.call(["bluetoothd", "-P", "input"])
-waiting = 0
-attackmac = (hex(uuid.getnode()+4).lstrip("0x").zfill(2).upper()) # gotta add 4 to get to the HID ctl otherwise proto wrong
-attackmac = ':'.join(attackmac[i:i+2] for i in range(0, len(attackmac), 2))  # this just adds the : every 2 chars
 print("[?] AntiLockDown by oxagast")
 print("[?] Inhibits screensavers by pressing innoculous keys over bluetooth.")
 if getpass.getuser() != "root":
     sys.stderr.write("[x] You need to run this program as root!\n")
     sys.exit(1)
+sys.tracebacklimit = 0  # this removes the traceback
+waiting = 0
+attackmac = (hex(uuid.getnode()+4).lstrip("0x").zfill(2).upper()) # gotta add 4 to get to the HID ctl otherwise proto wrong
+attackmac = ':'.join(attackmac[i:i+2] for i in range(0, len(attackmac), 2))  # this just adds the : every 2 chars
+subprocess.call(["systemctl", "stop", "bluetooth"])
+subprocess.call(["bluetoothd", "-P", "input"])
 print("[*] Attacking MAC detected as: %s" % attackmac)
 def macr(send_call_back):
     def fkeys():
@@ -43,7 +42,7 @@ def macr(send_call_back):
             animation = "|/-\\"  # we iterate over this
             print("[" + animation[idx % len(animation)] + "] Jiggling...", end='\r') # \r repositions the cursor at start
             idx+=1
-            time.sleep(0.1)
+            time.sleep(0.25)
     print("[!] Inhibiting lock screen on remote computer!")
     global st
     st = time.time()
@@ -61,6 +60,6 @@ if __name__ == '__main__':
         macr(bthid_srv.send)
     finally:
         if 'st' in globals():
-            print("\n[*] Jiggled for %s seconds." % (time.time() - st))
+            print("\n[*] Jiggled for %s seconds." % round((time.time() - st),2))
         print("[x] Stopped.")
         sys.exit(0)
