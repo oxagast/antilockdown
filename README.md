@@ -13,22 +13,18 @@ The program takes no arguments, and the output resembles:
 
 ```
 $ ./ald-jiggle.py
-D-Bus setup failed: Name already in use
-[?] AntiLockDown by oxagast
-[?] Inhibits screensavers by pressing innoculous keys over bluetooth.
-[*] Attacking MAC detected as: DC:53:60:6C:FC:B3
-[*] Registered HID profile
-[!] Ready, waiting for connection from PC to inhibit screensaver on...
-[*] Control channel connected to 00:15:83:FA:12:FC
-[*] Interrupt channel connected to 00:15:83:FA:12:FC
-[!] Inhibiting lock screen on remote computer!
-^CProcess Process-1:
-Process Process-2:
-
-[*] Jiggled for 2.28 seconds.
-[x] Stopped.
-KeyboardInterrupt
-KeyboardInterrupt
+[?] AntiLockDown v1.1 by oxagast                                                                                                                                                                                                                        
+[?] Inhibits screensavers by pressing innoculous keys over bluetooth.                                                                                                                                                                                   
+[*] Attacking MAC detected as: DC:53:60:6C:FC:B3                                                                                                                                                                                                        
+[*] Registered HID profile                                                                                                                                                                                                                              
+[!] Ready, waiting for connection from PC to inhibit screensaver on...                                                                                                                                                                                  
+[*] Control channel connected to 00:15:83:FA:12:FC                                                                                                                                                                                                      
+[*] Interrupt channel connected to 00:15:83:FA:12:FC                                                                                                                                                                                                    
+[!] Inhibiting lock screen on remote computer!                                                                                                                                                                                                          
+[*] Press Ctrl+C to stop!                                                                                                                                                                                                                                 
+^C                                                                                                                                                                                                                                                        
+[*] Jiggled for 13.99 seconds.                                                                                                                                                                                                                            
+[x] Signal caught, jiggling stopped.
 ```
 
 Once started, you simply open the victim computer's Bluetooth menu, pair, and connect to the attacking machine.
