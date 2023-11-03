@@ -3,7 +3,6 @@
 # oxagast / Marshall Whittaker
 
 import sys
-import os
 import time
 import re
 import uuid
@@ -13,7 +12,7 @@ import getpass
 from bthid import BluetoothHIDService
 from dbus.mainloop.glib import DBusGMainLoop
 ver = 1.1
-print("[?] AntiLockDown " + str(ver) + " by oxagast")
+print("[?] AntiLockDown v" + str(ver) + " by oxagast")
 print("[?] Inhibits screensavers by pressing innoculous keys over bluetooth.")
 if getpass.getuser() != "root":
     sys.stderr.write("[x] You need to run this program as root!\n")
