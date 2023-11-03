@@ -3,6 +3,7 @@
 # oxagast / Marshall Whittaker
 
 import sys
+import signal
 import time
 import re
 import uuid
@@ -22,9 +23,12 @@ sys.tracebacklimit = 0  # this removes the traceback
 waiting = 0
 attackmac = (hex(uuid.getnode()+4).lstrip("0x").zfill(2).upper()) # gotta add 4 to get to the HID ctl otherwise proto wrong
 attackmac = ':'.join(attackmac[i:i+2] for i in range(0, len(attackmac), 2))  # this just adds the : every 2 chars
-subprocess.call(["systemctl", "stop", "bluetooth"])
-subprocess.call(["bluetoothd", "-P", "input"])
+subprocess.call(["systemctl", "stop", "bluetooth"], stderr=subprocess.DEVNULL)
+subprocess.call(["bluetoothd", "-P", "input"], stderr=subprocess.DEVNULL)
 print("[*] Attacking MAC detected as: %s" % attackmac)
+def signal_handler(sig, frame):
+    print("[!] Ctrl+C caught, stopping...")
+    sys.exit(0)
 def macr(send_call_back):
     def fkeys():
         j = 1
@@ -44,14 +48,17 @@ def macr(send_call_back):
             idx+=1
             time.sleep(0.25)
     print("[!] Inhibiting lock screen on remote computer!")
+    signal.signal(signal.SIGINT, signal_handler)
+    print("[*] Press Ctrl+C to stop!")
     global st
     st = time.time()
-    anip = multiprocessing.Process(target=ani) # the spinning animation thread
-    jigp = multiprocessing.Process(target=fkeys) # pressing keys thread
+    anip = multiprocessing.Process(target=ani, daemon=True) # the spinning animation thread
+    jigp = multiprocessing.Process(target=fkeys, daemon=True) # pressing keys thread
     jigp.start()
     anip.start()
     jigp.join()
     anip.join()
+    signal.pause
 if __name__ == '__main__':
     DBusGMainLoop(set_as_default=True)
     srec = open("sdpr.xml").read()
@@ -60,6 +67,6 @@ if __name__ == '__main__':
         macr(bthid_srv.send)
     finally:
         if 'st' in globals():
-            print("\n[*] Jiggled for %s seconds." % round((time.time() - st),2))
+            print("[*] Jiggled for %s seconds." % round((time.time() - st),2))
         print("[x] Stopped.")
         sys.exit(0)
