@@ -27,7 +27,7 @@ subprocess.call(["systemctl", "stop", "bluetooth"], stderr=subprocess.DEVNULL)
 subprocess.call(["bluetoothd", "-P", "input"], stderr=subprocess.DEVNULL)
 print("[*] Attacking MAC detected as: %s" % attackmac)
 def signal_handler(sig, frame):
-    print("[!] Ctrl+C caught, stopping...")
+    #print("[!] Ctrl+C caught, stopping...")
     sys.exit(0)
 def macr(send_call_back):
     def fkeys():
@@ -67,6 +67,6 @@ if __name__ == '__main__':
         macr(bthid_srv.send)
     finally:
         if 'st' in globals():
-            print("[*] Jiggled for %s seconds." % round((time.time() - st),2))
-        print("[x] Stopped.")
+            print("                  \n[*] Jiggled for %s seconds." % round((time.time() - st),2))
+        print("[x] Signal caught, jiggling stopped.")
         sys.exit(0)
