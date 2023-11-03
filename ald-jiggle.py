@@ -42,8 +42,8 @@ def macr(send_call_back):
     def ani():
         waiting = 1
         idx = 0
+        animation = "|/-\\"  # we iterate over this
         while waiting:
-            animation = "|/-\\"  # we iterate over this
             print("[" + animation[idx % len(animation)] + "] Jiggling...", end='\r') # \r repositions the cursor at start
             idx+=1
             time.sleep(0.25)
