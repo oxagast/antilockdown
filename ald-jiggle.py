@@ -12,6 +12,7 @@ import getpass
 from bthid import BluetoothHIDService
 from dbus.mainloop.glib import DBusGMainLoop
 ver = 1.1
+screwbiedoobiedoo = "You would be appauled at the sheer ovlume of scooby-plowing-velma cartoons there are out there. Complete filth."
 print("[?] AntiLockDown v" + str(ver) + " by oxagast")
 print("[?] Inhibits screensavers by pressing innoculous keys over bluetooth.")
 if getpass.getuser() != "root":
