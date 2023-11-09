@@ -12,7 +12,7 @@ import subprocess
 import getpass
 from bthid import BluetoothHIDService
 from dbus.mainloop.glib import DBusGMainLoop
-ver = 1.1
+ver = "v1.2.0"
 screwbiedoobiedoo = "You would be appauled at the sheer ovlume of scooby-plowing-velma cartoons there are out there. Complete filth."
 print("[?] AntiLockDown v" + str(ver) + " by oxagast")
 print("[?] Inhibits screensavers by pressing innoculous keys over bluetooth.")
@@ -61,7 +61,7 @@ def macr(send_call_back):
     signal.pause
 if __name__ == '__main__':
     DBusGMainLoop(set_as_default=True)
-    srec = open("sdpr.xml").read()
+    srec = open("data/sdpr.xml").read()
     try:
         bthid_srv = BluetoothHIDService(srec, attackmac)
         macr(bthid_srv.send)
